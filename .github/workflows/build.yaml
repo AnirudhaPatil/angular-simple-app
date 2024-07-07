@@ -16,7 +16,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          repository: NavVis-Internal/ivion-frontend
+          repository: AnirudhaPatil/angular-simple-app
           ref: ${{ github.ref_name }}
 
       - name: Setup Node.js
