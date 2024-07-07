@@ -19,22 +19,21 @@ jobs:
           repository: NavVis-Internal/ivion-frontend
           ref: ${{ github.ref_name }}
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: 18
-        cache: ${{ inputs.cache }}
-        cache-dependency-path: "**/package.json"
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
+          cache-dependency-path: "**/package.json"
 
-    - name: Install dependencies
-      shell: bash
-      run: |
-        echo -n "Node.js " && node -v && echo -n "NPM " && npm -v 
-        npm config set unicode true
-        npm install 
+      - name: Install dependencies
+        shell: bash
+        run: |
+          echo -n "Node.js " && node -v && echo -n "NPM " && npm -v 
+          npm config set unicode true
+          npm install 
 
       - name: Build frontend
-        if: steps.cache-frontend.outputs.cache-hit != 'true'
         run: npm run build
 
       - name: Package dist folder
@@ -51,3 +50,4 @@ jobs:
           if-no-files-found: error
           # Retain only one day (min) since we rely on docker instead, but next job needs it
           retention-days: 1
+
