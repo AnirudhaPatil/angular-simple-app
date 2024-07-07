@@ -31,6 +31,7 @@ jobs:
         run: |
           echo -n "Node.js " && node -v && echo -n "NPM " && npm -v 
           npm config set unicode true
+          npm update -g @angular/cli
           npm install --legacy-peer-deps
 
       - name: Build frontend
