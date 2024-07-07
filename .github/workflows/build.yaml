@@ -31,7 +31,7 @@ jobs:
         run: |
           echo -n "Node.js " && node -v && echo -n "NPM " && npm -v 
           npm config set unicode true
-          npm install 
+          npm install --legacy-peer-deps
 
       - name: Build frontend
         run: npm run build
