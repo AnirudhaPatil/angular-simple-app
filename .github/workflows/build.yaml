@@ -1,0 +1,53 @@
+name: Frontend build
+
+on:
+  #  pull_request:
+  push:
+  #    branches:
+  #      - 'release/**'
+  #      - 'develop'
+  workflow_call:
+
+jobs:
+  build_frontend:
+    name: Build frontend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          repository: NavVis-Internal/ivion-frontend
+          ref: ${{ github.ref_name }}
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 18
+        cache: ${{ inputs.cache }}
+        cache-dependency-path: "**/package.json"
+
+    - name: Install dependencies
+      shell: bash
+      run: |
+        echo -n "Node.js " && node -v && echo -n "NPM " && npm -v 
+        npm config set unicode true
+        npm install 
+
+      - name: Build frontend
+        if: steps.cache-frontend.outputs.cache-hit != 'true'
+        run: npm run build
+
+      - name: Package dist folder
+        run: |
+          cd dist/
+          zip -r ../dist.zip *
+
+      - name: Upload packaged dist folder
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist.zip
+          path: dist.zip
+          # Error out upload since we need it for following steps
+          if-no-files-found: error
+          # Retain only one day (min) since we rely on docker instead, but next job needs it
+          retention-days: 1
